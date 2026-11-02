@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 export function Camera() {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         let stream: MediaStream | null = null;
@@ -15,6 +16,8 @@ export function Camera() {
                 }
             } catch {
                 setError('We need access to your camera to practise signs.');
+            } finally {
+                setLoading(false);
             }
         }
 
@@ -31,5 +34,16 @@ export function Camera() {
         return <p>{error}</p>;
     }
 
-    return <video ref={videoRef} autoPlay playsInline muted />;
+    return (
+  <>
+    {loading && <p>Starting camera…</p>}
+    <video
+      ref={videoRef}
+      autoPlay
+      playsInline
+      muted
+      style={{ display: loading ? 'none' : 'block' }}
+    />
+  </>
+);
 }
